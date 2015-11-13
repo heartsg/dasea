@@ -34,14 +34,12 @@ type LoggerConfig struct {
 
 type Logger struct {
     log  *logging.Logger
-    config *LoggerConfig
     writer *FileWriter
 }
 
 func NewLogger(config *LoggerConfig) *Logger {
     logger := &Logger{}
     logger.log = logging.MustGetLogger("dasea")
-    logger.config = config
     
     logger.SetConfig(config)
 
