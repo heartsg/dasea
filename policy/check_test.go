@@ -97,7 +97,7 @@ func TestOrCheck(t *testing.T) {
 
 func TestRuleCheck(t *testing.T) {
 	e := &PolicyEnforcer {
-		rules: &PolicyRules {
+		r: &PolicyRules {
 			rules:map[string]PolicyCheck {
 				"true": &TrueCheck{},
 				"false": &FalseCheck{},

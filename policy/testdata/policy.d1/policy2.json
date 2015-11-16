@@ -1,0 +1,8 @@
+{
+	"storage.put":"role:admin2",
+	"storage.get":"role:admin2",
+	"compute":"role:admin2",
+	"testinner2":"role:testinner2",
+	"testenable":"{{.is_enabled}}:true",
+	"testdisable":"false:{{.is_disabled}}"
+}

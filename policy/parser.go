@@ -31,18 +31,21 @@ type policyParser struct {
 //check.)  Of these, the "!" policy check is probably the most useful,
 //as it allows particular rules to be explicitly disabled.
 func (p *policyParser) parseTextRule(rule string) PolicyCheck {
-/*    if rule == "" {
+    if rule == "" {
         return &TrueCheck{}
     }
     
     //start parsing token stream
-    state := &parseState{}
-    for _ tok := range parseTokenize(rule) {
+    state := &parseState{tokens:make([]*token, 0)}
+    for _, tok := range parseTokenize(rule) {
         state.shift(tok)
     }
 
-    return state.result*/
-    return &FalseCheck{}
+    if result, ok := state.result(); ok {
+        return result.check
+    } else {
+        return &FalseCheck{}
+    }
 }
 
    /* # Parse the token stream
@@ -178,172 +181,107 @@ func parseTokenize(rule string) []*token {
 }
 
 type parseState struct {
-    tokens []token
+    tokens []*token
 }
 func (s *parseState) shift(tok *token) {
-    s.tokens = append(s.tokens, token)
+    s.tokens = append(s.tokens, tok)
     s.reduce()
 }
 func (s *parseState) reduce() {
+    if ok := s.reduceWrapCheck(); ok {
+        s.reduce()
+        return
+    }
+    if ok := s.reduceMakeAndExpr(); ok {
+        s.reduce()
+        return
+    }
+    if ok := s.reduceExtendAndExpr(); ok {
+        s.reduce()
+        return
+    }
+    if ok := s.reduceMakeOrExpr(); ok {
+        s.reduce()
+        return
+    }
+    if ok := s.reduceExtendOrExpr(); ok {
+        s.reduce()
+        return
+    }
+    if ok := s.reduceMakeNotExpr(); ok {
+        s.reduce()
+        return
+    }
     
+    //failed
+    return
 }
-
-
-def reducer(*tokens):
-    """Decorator for reduction methods.
-
-    Arguments are a sequence of tokens, in order, which should trigger running
-    this reduction method.
-    """
-
-    def decorator(func):
-        # Make sure we have a list of reducer sequences
-        if not hasattr(func, 'reducers'):
-            func.reducers = []
-
-        # Add the tokens to the list of reducer sequences
-        func.reducers.append(list(tokens))
-
-        return func
-
-    return decorator
-
-
-class ParseStateMeta(type):
-    """Metaclass for the :class:`.ParseState` class.
-
-    Facilitates identifying reduction methods.
-    """
-
-    def __new__(mcs, name, bases, cls_dict):
-        """Create the class.
-
-        Injects the 'reducers' list, a list of tuples matching token sequences
-        to the names of the corresponding reduction methods.
-        """
-
-        reducers = []
-
-        for key, value in cls_dict.items():
-            if not hasattr(value, 'reducers'):
-                continue
-            for reduction in value.reducers:
-                reducers.append((reduction, key))
-
-        cls_dict['reducers'] = reducers
-
-        return super(ParseStateMeta, mcs).__new__(mcs, name, bases, cls_dict)
-
-
-@six.add_metaclass(ParseStateMeta)
-class ParseState(object):
-    """Implement the core of parsing the policy language.
-
-    Uses a greedy reduction algorithm to reduce a sequence of tokens into
-    a single terminal, the value of which will be the root of the
-    :class:`Check` tree.
-
-    .. note::
-
-        Error reporting is rather lacking.  The best we can get with this
-        parser formulation is an overall "parse failed" error. Fortunately, the
-        policy language is simple enough that this shouldn't be that big a
-        problem.
-    """
-
-    def __init__(self):
-        """Initialize the ParseState."""
-
-        self.tokens = []
-        self.values = []
-
-    def reduce(self):
-        """Perform a greedy reduction of the token stream.
-
-        If a reducer method matches, it will be executed, then the
-        :meth:`reduce` method will be called recursively to search for any more
-        possible reductions.
-        """
-
-        for reduction, methname in self.reducers:
-            if (len(self.tokens) >= len(reduction) and
-                    self.tokens[-len(reduction):] == reduction):
-                # Get the reduction method
-                meth = getattr(self, methname)
-
-                # Reduce the token stream
-                results = meth(*self.values[-len(reduction):])
-
-                # Update the tokens and values
-                self.tokens[-len(reduction):] = [r[0] for r in results]
-                self.values[-len(reduction):] = [r[1] for r in results]
-
-                # Check for any more reductions
-                return self.reduce()
-
-    def shift(self, tok, value):
-        """Adds one more token to the state.
-
-        Calls :meth:`reduce`.
-        """
-
-        self.tokens.append(tok)
-        self.values.append(value)
-
-        # Do a greedy reduce...
-        self.reduce()
-
-    @property
-    def result(self):
-        """Obtain the final result of the parse.
-
-        :raises ValueError: If the parse failed to reduce to a single result.
-        """
-
-        if len(self.values) != 1:
-            raise ValueError('Could not parse rule')
-        return self.values[0]
-
-    @reducer('(', 'check', ')')
-    @reducer('(', 'and_expr', ')')
-    @reducer('(', 'or_expr', ')')
-    def _wrap_check(self, _p1, check, _p2):
-        """Turn parenthesized expressions into a 'check' token."""
-
-        return [('check', check)]
-
-    @reducer('check', 'and', 'check')
-    def _make_and_expr(self, check1, _and, check2):
-        """Create an 'and_expr'.
-
-        Join two checks by the 'and' operator.
-        """
-
-        return [('and_expr', _checks.AndCheck([check1, check2]))]
-
-    @reducer('and_expr', 'and', 'check')
-    def _extend_and_expr(self, and_expr, _and, check):
-        """Extend an 'and_expr' by adding one more check."""
-
-        return [('and_expr', and_expr.add_check(check))]
-
-    @reducer('check', 'or', 'check')
-    def _make_or_expr(self, check1, _or, check2):
-        """Create an 'or_expr'.
-
-        Join two checks by the 'or' operator.
-        """
-
-        return [('or_expr', _checks.OrCheck([check1, check2]))]
-
-    @reducer('or_expr', 'or', 'check')
-    def _extend_or_expr(self, or_expr, _or, check):
-        """Extend an 'or_expr' by adding one more check."""
-
-        return [('or_expr', or_expr.add_check(check))]
-
-    @reducer('not', 'check')
-    def _make_not_expr(self, _not, check):
-        """Invert the result of another check."""
-
-        return [('check', _checks.NotCheck(check))]
+func (s *parseState) reduceWrapCheck() bool {
+    length := len(s.tokens)
+    if length >= 3 && s.tokens[length - 3].id == "(" && s.tokens[length - 1].id == ")" &&
+        (s.tokens[length - 2].id == "check" || s.tokens[length - 2].id == "and_expr" ||
+        s.tokens[length - 2].id == "or_expr") {    
+        s.tokens = append(s.tokens[0:length-3], &token{"check", s.tokens[length-2].value, s.tokens[length-2].check})
+        
+        return true
+    }
+    return false
+}
+func (s *parseState) reduceMakeAndExpr() bool {
+    length := len(s.tokens)
+    if length >= 3 && s.tokens[length - 3].id == "check" && s.tokens[length - 2].id == "and" && s.tokens[length - 1].id == "check" {
+        andCheck := &AndCheck{rules:[]PolicyCheck{s.tokens[length - 3].check, s.tokens[length - 1].check}}
+        s.tokens = append(s.tokens[0:length - 3], &token{"and_expr", fmt.Sprintf("%s", andCheck), andCheck})
+        
+        return true
+    }
+    return false
+}
+func (s *parseState) reduceExtendAndExpr() bool {
+    length := len(s.tokens)
+    if length >= 3 && s.tokens[length - 3].id == "and_expr" && s.tokens[length - 2].id == "and" && s.tokens[length - 1].id == "check" {
+        andCheck := s.tokens[length - 3].check.(*AndCheck)
+        andCheck.AddCheck(s.tokens[length - 1].check)
+        s.tokens = append(s.tokens[0:length - 3], &token{"and_expr", fmt.Sprintf("%s", andCheck), andCheck})
+        return true
+    }
+    return false
+}
+func (s *parseState) reduceMakeOrExpr() bool {
+    length := len(s.tokens)
+    if length >= 3 && s.tokens[length - 3].id == "check" && s.tokens[length - 2].id == "or" && s.tokens[length - 1].id == "check" {
+        orCheck := &OrCheck{rules:[]PolicyCheck{s.tokens[length - 3].check, s.tokens[length - 1].check}}
+        s.tokens = append(s.tokens[0:length - 3], &token{"or_expr", fmt.Sprintf("%s", orCheck), orCheck})
+        
+        return true
+    }
+    return false
+}
+func (s *parseState) reduceExtendOrExpr() bool {
+    length := len(s.tokens)
+    if length >= 3 && s.tokens[length - 3].id == "or_expr" && s.tokens[length - 2].id == "or" && s.tokens[length - 1].id == "check" {
+        orCheck := s.tokens[length - 3].check.(*OrCheck)
+        orCheck.AddCheck(s.tokens[length - 1].check)
+        s.tokens = append(s.tokens[0:length - 3], &token{"or_expr", fmt.Sprintf("%s", orCheck), orCheck})
+        
+        return true
+    }
+    return false
+}
+func (s *parseState) reduceMakeNotExpr() bool {
+    length := len(s.tokens)
+    if length >= 2 && s.tokens[length - 2].id == "not" && s.tokens[length - 1].id == "check" {
+        notCheck := &NotCheck{rule:s.tokens[length - 1].check}
+        s.tokens = append(s.tokens[0:length - 2], &token{"check", fmt.Sprintf("%s", notCheck), notCheck})
+        
+        return true
+    }
+    return false
+}
+func (s *parseState) result() (*token, bool) {
+    if len(s.tokens) != 1 {
+        return nil, false
+    } else {
+        return s.tokens[0], true
+    }
+}

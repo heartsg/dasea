@@ -1,6 +1,7 @@
 package policy
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -112,5 +113,30 @@ func TestTokenize(t *testing.T) {
 	if t1[0].id != "check" || t1[1].id != "or" || t1[2].id != "(" || t1[3].id != "check" ||
 		t1[4].id != "and" || t1[5].id != "check" || t1[6].id != ")" {
 		t.Errorf("Parse tokenize error, id wrong")	
+	}
+}
+
+func TestShiftReducer(t *testing.T) {
+	t1 := parseTokenize("role:admin or ({{.project_id}}:{{.project_id}} and role:projectadmin)")
+	s1 := &parseState { tokens: make([]*token, 0) }
+	for _, tok1 := range t1 {
+		s1.shift(tok1)
+		s1.reduce()
+	}
+	if result1, ok := s1.result(); !ok {
+		t.Errorf("Shift reduce failed")
+	} else if result1.value != "(role:admin or ({{.project_id}}:{{.project_id}} and role:projectadmin))" {
+		t.Errorf("Shift reduce failed")
+	}
+}
+
+func TestPolicyParser(t *testing.T) {
+	p := &policyParser{}
+	r1, err := p.parseRule("role:admin or ({{.project_id}}:{{.project_id}} and role:projectadmin)")
+	if err != nil {
+		t.Errorf("Parse rule failed")
+	}
+	if fmt.Sprintf("%s", r1) != "(role:admin or ({{.project_id}}:{{.project_id}} and role:projectadmin))" {
+		t.Errorf("Parse rule failed")
 	}
 }

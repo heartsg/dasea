@@ -1,0 +1,6 @@
+{
+	"storage.put":"role:admin",
+	"storage.get":"role:admin",
+	"compute":"role:admin",
+	"testouter":"role:testouter"
+}
