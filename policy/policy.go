@@ -76,13 +76,13 @@ func (e *PolicyEnforcer) Enforce(rule interface{},  target map[string]interface{
 }
 func (e *PolicyEnforcer) LoadRules(o *PolicyOpts) {
     //load from json file if exists
-    if o.PolicyFile != "" {
-        e.loadJsonFile(o.PolicyFile)
+    if o.File != "" {
+        e.loadJsonFile(o.File)
     }
     
     //load from all files in json dir if exists
-    if o.PolicyDirs != nil {
-        for _, dir := range o.PolicyDirs {
+    if o.Dirs != nil {
+        for _, dir := range o.Dirs {
             filepath.Walk(dir, e.visit)
         }
     }
@@ -91,7 +91,7 @@ func (e *PolicyEnforcer) LoadRules(o *PolicyOpts) {
     if e.r == nil {
         e.r = &PolicyRules{ rules: make(map[string]PolicyCheck) }
     }
-    e.r.defaultRule = o.PolicyDefaultRule
+    e.r.defaultRule = o.DefaultRule
 }
 func (e *PolicyEnforcer) loadJsonFile(path string) {
     data, err := ioutil.ReadFile(path)

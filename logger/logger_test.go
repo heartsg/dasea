@@ -6,8 +6,9 @@ import (
 )
 
 func TestConsoleLogger(t *testing.T) {
-	c := &LoggerConfig{} //all false, defaulted to console
-	l := NewLogger(c)
+	c := &LoggerOpts{} //all false, defaulted to console
+	l := NewLogger("test")
+	l.SetOpts(c)
 	l.Debug("debug")
 	l.Info("info")
 	l.Notice("notice")
@@ -17,8 +18,9 @@ func TestConsoleLogger(t *testing.T) {
 }
 
 func TestStdoutLogger(t *testing.T) {
-	c := &LoggerConfig{ StdoutEnable:true, StdoutLevel:DEBUG } 
-	l := NewLogger(c)
+	c := &LoggerOpts{ StdoutEnable:true, StdoutLevel:DEBUG } 
+	l := NewLogger("test")
+	l.SetOpts(c)
 	l.Debug("debug")
 	l.Info("info")
 	l.Notice("notice")
@@ -28,8 +30,9 @@ func TestStdoutLogger(t *testing.T) {
 }
 
 func TestStderrLogger(t *testing.T) {
-	c := &LoggerConfig{ StderrEnable:true, StderrLevel:ERROR } 
-	l := NewLogger(c)
+	c := &LoggerOpts{ StderrEnable:true, StderrLevel:ERROR } 
+	l := NewLogger("test")
+	l.SetOpts(c)
 	l.Debug("debug")
 	l.Info("info")
 	l.Notice("notice")
@@ -39,9 +42,10 @@ func TestStderrLogger(t *testing.T) {
 }
 
 func TestFileLogger(t *testing.T) {
-	c := &LoggerConfig{ FileEnable:true, FileLevel:WARNING, FilePath:"test.log", FileRotateEnable:true, 
+	c := &LoggerOpts{ FileEnable:true, FileLevel:WARNING, FilePath:"test.log", FileRotateEnable:true, 
 		FileSizeLimit:1024*1024, FileRotateLimit:3 } 
-	l := NewLogger(c)
+	l := NewLogger("test")
+	l.SetOpts(c)
 	l.Debug("debug")
 	l.Info("info")
 	l.Notice("notice")
@@ -53,11 +57,12 @@ func TestFileLogger(t *testing.T) {
 }
 
 func TestAllLogger(t *testing.T) {
-	c := &LoggerConfig{ StdoutEnable:true, StdoutLevel:DEBUG,
+	c := &LoggerOpts{ StdoutEnable:true, StdoutLevel:DEBUG,
 		StderrEnable:true, StderrLevel:ERROR,
 		FileEnable:true, FileLevel:WARNING, FilePath:"test_together.log", FileRotateEnable:true, 
 		FileSizeLimit:1024*1024, FileRotateLimit:3 } 
-	l := NewLogger(c)
+	l := NewLogger("test")
+	l.SetOpts(c)
 	l.Debug("debug together")
 	l.Info("info together")
 	l.Notice("notice together")

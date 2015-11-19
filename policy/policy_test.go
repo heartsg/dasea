@@ -42,12 +42,12 @@ func TestLoadPolicyRules(t *testing.T) {
 
 func TestPolicyEnforcerLoad(t *testing.T) {
 	policyOpts := &PolicyOpts{
-		PolicyFile:"testdata/policy.json",
-		PolicyDirs:[]string{
+		File:"testdata/policy.json",
+		Dirs:[]string{
 			"testdata/policy.d1",
 			"testdata/policy.d2",
 		},
-		PolicyDefaultRule:"default",
+		DefaultRule:"default",
 	}
 	
 	//start loading
@@ -83,12 +83,12 @@ func TestPolicyEnforcerLoad(t *testing.T) {
 
 func TestPolicyEnforcerEnforce(t *testing.T) {
 	policyOpts := &PolicyOpts{
-		PolicyFile:"testdata/policy.json",
-		PolicyDirs:[]string{
+		File:"testdata/policy.json",
+		Dirs:[]string{
 			"testdata/policy.d1",
 			"testdata/policy.d2",
 		},
-		PolicyDefaultRule:"default",
+		DefaultRule:"default",
 	}
 	
 	//start loading

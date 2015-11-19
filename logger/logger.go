@@ -19,30 +19,15 @@ const (
 	DEBUG = int(logging.DEBUG)
 )
 
-type LoggerConfig struct {
-    StdoutEnable bool
-    StdoutLevel int
-    StderrEnable bool
-    StderrLevel int
-    FileEnable bool
-    FileLevel int
-    FilePath string
-    FileSizeLimit int64
-    FileRotateEnable bool
-    FileRotateLimit int
-}
-
 type Logger struct {
     log  *logging.Logger
     writer *FileWriter
 }
 
-func NewLogger(config *LoggerConfig) *Logger {
+func NewLogger(name string) *Logger {
     logger := &Logger{}
-    logger.log = logging.MustGetLogger("dasea")
+    logger.log = logging.MustGetLogger(name)
     
-    logger.SetConfig(config)
-
     return logger
 }
 
@@ -51,7 +36,7 @@ func (l *Logger) Close() {
         l.writer.Close()
     }
 }
-func (l *Logger) SetConfig(c *LoggerConfig) {
+func (l *Logger) SetOpts(c *LoggerOpts) {
     l.Close()
     
     //Backend is an interface
