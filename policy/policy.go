@@ -7,7 +7,58 @@ import (
     "encoding/json"
 )
 
-//Based on openstack oslo.policy, used to check authorization policy
+// 1. Overview
+// Based on openstack oslo.policy, used to check authorization policy
+// Read docs on oslo.policy for more details.
+//
+// 2. Policy files
+//
+// Policy files are json format files that stores key:value pairs.
+// 
+// Key is used to identify the service/API/or other entities that this policy
+// applies. Example: "identity:get_user" represents the keystone identity service
+// get_user API.
+//
+// Value represents the rule or check (they are roughly the samething in our docs) for
+// the service/api identified by Key. Example will be: "role:admin or is_admin:true".
+//
+// So the overall key:value pair example will be "identity:get_user":"role:admin or {{.is_admin}}:true"
+//
+// 3. Rules/Checks
+// 
+// There are several types of rules
+//   - logical: and/or/not
+//   - role: the creds["roles"] caontains a list of roles that current session possesses, the 
+//           role check passes (returns true) only if the role listed behind is in creds["roles"].
+//           E.g., "role:admin" passes only creds["roles"] contains an element called "admin".
+//   - rule: based on other rules in the policy. E.g.,
+//           { 
+//              "admin_required":"role:admin or is_admin:true",
+//              "identity:get_user":"rule:admin_required or role:operator"
+//           }
+//    - generic rules, e.g., "{{.is_admin}}:true", the check passes only if creds["is_admin"] is true.
+//      Another example: "true:{{.is_admin}}", the check passes only if target["is_admin"] is true.
+//      "{{.is_admin}}:{{.is_admin}}", the check passes only if creds["is_admin"] == target["is_admin"]
+// 
+// 4. Usage
+//
+// Firstly, create a PolicyEnforcer object given PolicyOpts, the opts should contain the policy file to load
+// etc. information.
+//
+//   enforcer := LoadRules(opts)
+//
+// Then we can enforce a policy by,
+//
+//   enforcer.Enforce(key, target, creds)
+//
+// where key is the Key such as "identity:get_user"
+//
+// If we already have a Check object, we can also pass check as key,
+//
+//    enforcer.Enforce(check, target, creds)
+//
+// Enforce will return true if the policy allows, or it will return false.
+//
 
 type PolicyRules struct {
     rules map[string]PolicyCheck

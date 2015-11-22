@@ -58,19 +58,77 @@ Because openstack client and keystone works together only for same version (e.g.
 source), it is good to install both keystone and openstack from latest source. We already showed
 how to install openstackclient from source, now is keystone source.
 
-We will configure keystone from source and let it work together with apache2.
+We will configure keystone from source, e will then work on how to setup keystone from 
+source and let it work together with apache2.
 
-Too trouble some, try without apache first.
+> virtualenv .env
+> source .env/bin/activate
+> pip install -r requirements.txt
+> python setup.py install
+
+Then copy all configuration files into ~/.keystone/, and modify keystone.conf accordingly.
+
+
+
+
 
 4. Configuring policies for keystone
 
-#create a project named admin, within default domain
+#create a super domain for super administration purpose
+ openstack --os-token ADMIN --os-url http://localhost:35357/v3 --os-identity-api-version 3 \
+ domain create --description "For super administrators" super
+#create a project named super, within super domain
 openstack --os-token ADMIN --os-url http://localhost:35357/v3 --os-identity-api-version 3 project \
- create --domain default --description "Admin project" admin
-#create a user named super, within project admin and default domain
+ create --domain super --description "Super project" super
+#create a user named super, within super domain
+#for testing purpose, we make super password super too
 openstack --os-token ADMIN --os-url http://localhost:35357/v3 --os-identity-api-version 3 user \
- create --domain default super
-#create a role super an assign to the user super
+ create --domain super --password-prompt super
+#create a user named admin, within super domain, password is admin
+openstack --os-token ADMIN --os-url http://localhost:35357/v3 --os-identity-api-version 3 user \
+ create --domain super --password-prompt admin
+#create a role super an assign to the project super and  user super
+openstack --os-token ADMIN --os-url http://localhost:35357/v3 --os-identity-api-version 3 role \
+ create super
+openstack --os-token ADMIN --os-url http://localhost:35357/v3 --os-identity-api-version 3 role \
+ add --project super --user super super
+#create role admin
+openstack --os-token ADMIN --os-url http://localhost:35357/v3 --os-identity-api-version 3 role \
+ create admin
+openstack --os-token ADMIN --os-url http://localhost:35357/v3 --os-identity-api-version 3 role \
+ add --project super --user admin admin
  
+
+#modify default keystone policy
+The default keystone policy (or the overall openstack policy), says that all admins are allowed to
+do all operations. However, we want the domain-specific admins only have rights to do parts
+of the operations such as create projects/users only for the specific domains. We do not allow admin users
+to create domains.
+
+Therefore, we have super role, and only allow super role to do some specific tasks. The modified
+keystone policy is given in repo.
+
+#test new created super user and new policy
+
+1. remove admin_token_auth from keystone_paste.ini
+2. try to use the new super user and admin user to login
+3. super user should be able to create roles, but admin user should not
+
+> openstack --os-auth-url http://localhost:35357/v3 \
+  --os-project-domain-name super --os-user-domain-name super \
+  --os-project-name super --os-username super --os-auth-type password \
+  token issue
+  
+Record the id field, replace the id with ADMIN in the --os-token above. New roles
+can be created/deleted without problem.
+
+> openstack --os-auth-url http://localhost:35357/v3 \
+  --os-project-domain-name super --os-user-domain-name super \
+  --os-project-name super --os-username admin --os-auth-type password \
+  token issue
+  
+The admin id does not have right to create/delete roles.
+
+
 
 

@@ -147,9 +147,9 @@ func (i *INILoader) Load(s interface{}) (err error) {
 	//   [parent.child.child] and etc.
 	
 	// Slices are separated by comma , such as
-	//   array = 1,2,3
+	//   array=1,2,3
 	// Maps are defined by Json style
-	//   map = {"key":1, "key":2}
+	//   map={"key":1,"key":2}
 	
 	var section string
 	if i.LoadFromGlobal {
