@@ -1,0 +1,13 @@
+syntax = "proto3";
+package testdata;
+
+import "timestamp.proto";
+
+message TestData_1 {
+	message Data_1 {
+		int32 radar = 1;
+		int32 dummy = 2;
+		Timestamp time = 3;
+	}
+	repeated Data_1 data = 1;
+}

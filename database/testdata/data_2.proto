@@ -1,0 +1,17 @@
+syntax = "proto3";
+package testdata;
+
+import "timestamp.proto";
+
+message TestData_2 {
+	message Data_2 {
+		int32 a = 1;
+		int64 b = 2;
+		sint32 c = 3;
+		sint64 d = 4;
+		float e = 5;
+		double f = 6;
+		Timestamp time = 7;
+	}
+	repeated Data_2 data = 1;
+}
