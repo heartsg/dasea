@@ -112,6 +112,11 @@ func (r *PolicyRules) UpdateFromMap(m map[string]interface{}) {
 type PolicyEnforcer struct {
     r *PolicyRules	
 }
+func New(o *PolicyOpts) *PolicyEnforcer {
+    e := &PolicyEnforcer{}
+    e.LoadRules(o)
+    return e
+}
 func (e *PolicyEnforcer) RuleCheck(rule string, target map[string]interface{}, creds map[string]interface{}) bool {
     return e.r.RuleCheck(rule, target, creds, e)
 }

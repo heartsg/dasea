@@ -7,8 +7,8 @@ import (
 
 func TestConsoleLogger(t *testing.T) {
 	c := &LoggerOpts{} //all false, defaulted to console
-	l := NewLogger("test")
-	l.SetOpts(c)
+	l := New("test")
+	SetOpts(c)
 	l.Debug("debug")
 	l.Info("info")
 	l.Notice("notice")
@@ -19,8 +19,8 @@ func TestConsoleLogger(t *testing.T) {
 
 func TestStdoutLogger(t *testing.T) {
 	c := &LoggerOpts{ StdoutEnable:true, StdoutLevel:DEBUG } 
-	l := NewLogger("test")
-	l.SetOpts(c)
+	l := New("test")
+	SetOpts(c)
 	l.Debug("debug")
 	l.Info("info")
 	l.Notice("notice")
@@ -31,8 +31,8 @@ func TestStdoutLogger(t *testing.T) {
 
 func TestStderrLogger(t *testing.T) {
 	c := &LoggerOpts{ StderrEnable:true, StderrLevel:ERROR } 
-	l := NewLogger("test")
-	l.SetOpts(c)
+	l := New("test")
+	SetOpts(c)
 	l.Debug("debug")
 	l.Info("info")
 	l.Notice("notice")
@@ -44,15 +44,15 @@ func TestStderrLogger(t *testing.T) {
 func TestFileLogger(t *testing.T) {
 	c := &LoggerOpts{ FileEnable:true, FileLevel:WARNING, FilePath:"test.log", FileRotateEnable:true, 
 		FileSizeLimit:1024*1024, FileRotateLimit:3 } 
-	l := NewLogger("test")
-	l.SetOpts(c)
+	l := New("test")
+	SetOpts(c)
 	l.Debug("debug")
 	l.Info("info")
 	l.Notice("notice")
 	l.Warning("warning")
 	l.Error("error")
 	l.Critical("critical")
-	l.Close()
+	Close()
 	os.Remove("test.log.0")	
 }
 
@@ -61,14 +61,14 @@ func TestAllLogger(t *testing.T) {
 		StderrEnable:true, StderrLevel:ERROR,
 		FileEnable:true, FileLevel:WARNING, FilePath:"test_together.log", FileRotateEnable:true, 
 		FileSizeLimit:1024*1024, FileRotateLimit:3 } 
-	l := NewLogger("test")
-	l.SetOpts(c)
+	l := New("test")
+	SetOpts(c)
 	l.Debug("debug together")
 	l.Info("info together")
 	l.Notice("notice together")
 	l.Warning("warning together")
 	l.Error("error together")
 	l.Critical("critical together")
-	l.Close()
+	Close()
 	os.Remove("test_together.log.0")
 }
