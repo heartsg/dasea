@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	
 	"github.com/heartsg/dasea/requests"
+	"github.com/heartsg/dasea/keystone/keystoneclient"
 	"github.com/heartsg/dasea/keystone/keystoneclient/client"
 	"github.com/heartsg/dasea/keystone/keystoneclient/types"
 )
@@ -72,7 +73,7 @@ func TestUserCreate(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	userResource := &User {
 		Session: session,
@@ -160,7 +161,7 @@ func TestList(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	userResource := &User {
 		Session: session,
@@ -213,7 +214,7 @@ func TestUserDelete (t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	userResource := &User {
 		Session: session,
@@ -267,7 +268,7 @@ func TestUserGet (t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	userResource := &User {
 		Session: session,
@@ -346,7 +347,7 @@ func TestUserUpdate(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	userResource := &User {
 		Session: session,
@@ -405,7 +406,7 @@ func TestUserChangePassword(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	userResource := &User {
 		Session: session,
@@ -472,7 +473,7 @@ func TestUserListGroups(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	userResource := &User {
 		Session: session,
@@ -551,7 +552,7 @@ func TestUserListProjects(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	userResource := &User {
 		Session: session,

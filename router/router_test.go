@@ -363,7 +363,7 @@ func TestRouterLookup(t *testing.T) {
 	if handle == nil {
 		t.Fatal("Got no handle!")
 	} else {
-		handle(nil, nil, nil)
+		handle(context.Background(), nil, nil)
 		if !routed {
 			t.Fatal("Routing failed!")
 		}
@@ -420,7 +420,7 @@ func TestRouterServeFiles(t *testing.T) {
 }
 
 func routerTagMiddleware(tag string, t *testing.T) Middleware {
-	return Middleware(func(ctx context.Context, w http.ResponseWriter, r *http.Request) context.Context {
+	return MiddlewareFunc(func(ctx context.Context, w http.ResponseWriter, r *http.Request) context.Context {
 		ctx = SetMiddlewareParam(ctx, tag, tag)
 		if (tag == "t4") {
 			t1, ok := MiddlewareParam(ctx, "t1").(string)
@@ -446,8 +446,8 @@ func routerTagMiddleware(tag string, t *testing.T) Middleware {
 func TestCommonMiddleware(t *testing.T) {
 	RegisterCommonMiddleware(routerTagMiddleware("t1", t))
 	RegisterCommonMiddleware(routerTagMiddleware("t2", t))
-	RegisterCommonPostMiddleware(routerTagMiddleware("t3", t))
-	RegisterCommonPostMiddleware(routerTagMiddleware("t4", t))
+	RegisterCommonAfterware(routerTagMiddleware("t3", t))
+	RegisterCommonAfterware(routerTagMiddleware("t4", t))
 	
 	router := NewRouter()
 	router.HandleFunc("GET", "/", func(ctx context.Context, w http.ResponseWriter, r *http.Request) {

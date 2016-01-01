@@ -9,7 +9,7 @@ import (
 
 func TestPolicyOpts(t *testing.T) {
 	loader := config.New()
-	policyOpts := &PolicyOpts{}
+	policyOpts := &Opts{}
 	loader.Load(policyOpts)
 	if policyOpts.File != "policy.json" {
 		t.Error("PolicyOpts file error")

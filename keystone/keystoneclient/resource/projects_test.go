@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	
 	"github.com/heartsg/dasea/requests"
+	"github.com/heartsg/dasea/keystone/keystoneclient"
 	"github.com/heartsg/dasea/keystone/keystoneclient/client"
 	"github.com/heartsg/dasea/keystone/keystoneclient/types"
 )
@@ -70,7 +71,7 @@ func TestProjectCreate(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	projectResource := &Project {
 		Session: session,
@@ -160,7 +161,7 @@ func TestProjectList(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	projectResource := &Project {
 		Session: session,
@@ -207,7 +208,7 @@ func TestProjectDelete (t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	projectResource := &Project {
 		Session: session,
@@ -260,7 +261,7 @@ func TestProjectGet (t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	projectResource := &Project {
 		Session: session,
@@ -340,7 +341,7 @@ func TestProjectUpdate(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	projectResource := &Project {
 		Session: session,

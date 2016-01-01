@@ -8,6 +8,7 @@ import (
 	"errors"
 	
 	"github.com/heartsg/dasea/requests"
+	"github.com/heartsg/dasea/keystone/keystoneclient"
 )
 //
 // Session will automatically deal with a lot of repeated stuff
@@ -37,8 +38,7 @@ type Session struct {
 	requests *requests.Requests
 	Auth Auth
 	
-	// keystone server url, normally it's the same value
-	// as in KeystoneclientOpts.AuthUrl.
+	// keystone server url
 	// e.g.: 127.0.0.1:35357/v3
 	BaseUrl string
 	
@@ -59,14 +59,17 @@ type Session struct {
 //
 // Make these parameters as individually configured.
 //
-func NewSession(url string, auth Auth) *Session {
+func NewSession(opts *keystoneclient.Opts, auth Auth) *Session {
 	s := &Session {
 		requests: requests.New(),
 		Auth: auth,
-		BaseUrl: url,
+		BaseUrl: opts.AuthUrl,
 		userAgent: "Dasea Keystone client",
 	}
 	s.requests.SetResponseBodyValid(false)
+	if opts.HttpConnectionTimeout != 0 {
+		s.requests.Timeout(time.Duration(opts.HttpConnectionTimeout)*time.Second)
+	}
 	return s
 }
 func (s *Session) Timeout(timeout time.Duration) *Session {

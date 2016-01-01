@@ -1,0 +1,24 @@
+[MetaDB]
+Type = "mysql"
+Hosts = ["127.0.0.1"]
+User = "dasea"
+Password = "dasea"
+
+[DataDB]
+Type = "cassandra"
+Hosts = ["127.0.0.1"]
+User = "dasea"
+Password = "dasea"
+
+[KeystoneMiddleware]
+AuthMethod = "password"
+Username = "Storage"
+Password = "DaseaStorage"
+UserDomainName = "Service"
+ProjectName = "Service"
+ProjectDomainName = "Service"
+DelayAuthDecision = false
+MemcachServers = ["127.0.0.1"]
+  [KeystoneMiddleware.Client]
+  AuthUrl = "127.0.0.1:35357"
+  HttpConnectionTimeout = 3

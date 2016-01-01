@@ -203,7 +203,7 @@ func (r *Router) ContextHandlerFunc(method, path string, handle ContextHandlerFu
 		r.trees[method] = root
 	}
 	//Before put handle, we put common middlewares around the handle
-	handle = MiddlewareChainWithPostMiddleware(commonMiddlewares, handle, commonPostMiddlewares)
+	handle = MiddlewareHandlerAfterwareChain(commonMiddlewares, handle, commonAfterwares)
 	
 	root.addRoute(path, handle)
 }

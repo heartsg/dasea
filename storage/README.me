@@ -1,0 +1,53 @@
+This is the implementation for storage servers. All user devices such as sensors
+shall interact with the storage servers.
+
+1. Domains, Projects, Users, Devices
+
+For domains/projects/users, they are already existed in keystone identity server.
+However, for storage purpose, there are some special data needed to be saved
+"locally" inside the storage service.
+
+For example, there might be lat and long location inforation associated with each
+device, and for each end-device, there's an aggregation device (with keystone accounts)
+that sends data for it. Each end-device even does not require to have a keystone account 
+associated with it.
+
+Therefore, we also create a table for devices (but for users, projects and domains, they
+may require additional tables in the future, but we don't create for them currently).
+
+2. DB engines
+
+We try to make use of most open source tools for real
+backend storage. Writing a storage engine from ground up is currently out of our resource limitations.
+
+There are many open-source databases that are ok for our use-cases, each of them have its own
+pros & cons. These database engines include,
+
+   - MariaDB/Mysql with Galera
+   - Mysql NDB cluster
+   - Postgresql with pg_shard extension
+   - OceanBase
+   - Cassandra
+   - MongoDB
+   - SequoiaDB
+   - etc.
+   
+Each data storage engine supports seamless data replication. We currently fix on a design to use Mysql/MariaDB/Postgresql
+like relational database to save all meta data including devices, data stream etc. meta data. We use Cassandra like Nosql
+database to save billions of real data. Oceanbase is not open-sourced after 0.4.2 and therefore we do not consider the
+new sql databases engine.
+
+For our storage engine, we only needs to consider stateless storage because all states should be already  maintained
+in the above database enegines which already caters for replication and sharding.
+
+3. Dependencies
+
+For SQL based databases, we make use of go-xorm (which in turn depends on various drivers). The supported databases include,
+   - Mysql
+   - MariaDB
+   - Postgresql
+
+For Cassandra supports, we make use of gocql and gocassa.
+
+4. 
+

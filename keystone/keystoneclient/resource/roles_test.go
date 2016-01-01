@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	
 	"github.com/heartsg/dasea/requests"
+	"github.com/heartsg/dasea/keystone/keystoneclient"
 	"github.com/heartsg/dasea/keystone/keystoneclient/client"
 	"github.com/heartsg/dasea/keystone/keystoneclient/types"
 )
@@ -61,7 +62,7 @@ func TestRoleCreate(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	roleResource := &Role {
 		Session: session,
@@ -130,7 +131,7 @@ func TestRoleList(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	roleResource := &Role {
 		Session: session,
@@ -177,7 +178,7 @@ func TestRoleDelete (t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	roleResource := &Role {
 		Session: session,
@@ -226,7 +227,7 @@ func TestRoleGet (t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	roleResource := &Role {
 		Session: session,
@@ -295,7 +296,7 @@ func TestRoleUpdate(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	roleResource := &Role {
 		Session: session,
@@ -364,7 +365,7 @@ func TestRoleListForUserOnDomain(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	roleResource := &Role {
 		Session: session,
@@ -464,7 +465,7 @@ func TestRoleAssignments(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	roleResource := &Role {
 		Session: session,

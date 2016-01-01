@@ -9,7 +9,7 @@ import (
 
 func TestLoggerOpts(t *testing.T) {
 	loader := config.New()
-	loggerOpts := &LoggerOpts{}
+	loggerOpts := &Opts{}
 	loader.Load(loggerOpts)
 	if loggerOpts.StdoutEnable != true {
 		t.Error("LoggerOpts load error")

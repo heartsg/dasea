@@ -8,7 +8,7 @@ package logger
 //	 4: INFO
 // 	 5: DEBUG
 
-type LoggerOpts struct {
+type Opts struct {
     StdoutEnable bool `default:"true"`
     StdoutLevel int `default:"4"`
     StderrEnable bool `default:"false"`

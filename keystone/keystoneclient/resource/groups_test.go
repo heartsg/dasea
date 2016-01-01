@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	
 	"github.com/heartsg/dasea/requests"
+	"github.com/heartsg/dasea/keystone/keystoneclient"
 	"github.com/heartsg/dasea/keystone/keystoneclient/client"
 	"github.com/heartsg/dasea/keystone/keystoneclient/types"
 )
@@ -65,7 +66,7 @@ func TestGroupCreate(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	groupResource := &Group {
 		Session: session,
@@ -140,7 +141,7 @@ func TestGroupList(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	groupResource := &Group {
 		Session: session,
@@ -187,7 +188,7 @@ func TestGroupDelete (t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	groupResource := &Group {
 		Session: session,
@@ -238,7 +239,7 @@ func TestGroupGet (t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	groupResource := &Group {
 		Session: session,
@@ -310,7 +311,7 @@ func TestGroupUpdate(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	groupResource := &Group {
 		Session: session,
@@ -378,7 +379,7 @@ func TestGroupListUsers(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	groupResource := &Group {
 		Session: session,
@@ -420,7 +421,7 @@ func TestGroupAddUser(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	groupResource := &Group {
 		Session: session,
@@ -457,7 +458,7 @@ func TestGroupCheckUser(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	groupResource := &Group {
 		Session: session,
@@ -494,7 +495,7 @@ func TestGroupDeleteUser(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	groupResource := &Group {
 		Session: session,

@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	
 	"github.com/heartsg/dasea/requests"
+	"github.com/heartsg/dasea/keystone/keystoneclient"
 	"github.com/heartsg/dasea/keystone/keystoneclient/client"
 	"github.com/heartsg/dasea/keystone/keystoneclient/types"
 )
@@ -65,7 +66,7 @@ func TestDomainCreate(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	domainResource := &Domain {
 		Session: session,
@@ -140,7 +141,7 @@ func TestDomainList(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	domainResource := &Domain {
 		Session: session,
@@ -187,7 +188,7 @@ func TestDomainDelete (t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	domainResource := &Domain {
 		Session: session,
@@ -238,7 +239,7 @@ func TestDomainGet (t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	domainResource := &Domain {
 		Session: session,
@@ -309,7 +310,7 @@ func TestDomainUpdate(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	domainResource := &Domain {
 		Session: session,

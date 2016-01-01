@@ -18,17 +18,13 @@ func (a *AuthToken) GetAccess(session *Session) (*AccessInfo, error) {
 	if a.Access != nil && ! a.Access.WillExpireSoon() {
 		return a.Access, nil
 	}
-	
 	authRequest, err := types.NewAuthRequestFromParams(a.Params)
-		
 	if err != nil {
 		return nil, err
-	}	
-	
+	}
 	if session == nil  {
 		return nil, errors.New("No client.Session to send the authentication request.")
 	}
-	
 	resp, body, err := session.Request("/auth/tokens", requests.POST, nil, nil, authRequest, false)
 	if err != nil {
 		return nil, err

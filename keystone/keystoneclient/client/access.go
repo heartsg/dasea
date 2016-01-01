@@ -116,5 +116,13 @@ func (a *AccessInfo) WillExpireSoon() bool {
 	return t.Before(time.Now())
 }
 
+func (a *AccessInfo) Expired() bool {
+	expires := a.Expires()
+	if expires == nil {
+		return false
+	}
+	return expires.Before(time.Now())
+}
+
 
 

@@ -6,6 +6,7 @@ import (
 	"testing"
 	
 	"github.com/heartsg/dasea/requests"
+	"github.com/heartsg/dasea/keystone/keystoneclient"
 	"github.com/heartsg/dasea/keystone/keystoneclient/client"
 )
 
@@ -25,7 +26,7 @@ func TestGetAccess(t *testing.T) {
 			t.Errorf("Expected 'X-Auth-Token' == %q; got %q", "12345", r.Header.Get("X-Auth-Token"))
 		}
 		if r.Header.Get("X-Subject-Token") != "67890" {
-			t.Errorf("Expected 'X-Subject-Token' == %q; got %q", "67890", r.Header.Get("X-Auth-Token"))			
+			t.Errorf("Expected 'X-Subject-Token' == %q; got %q", "67890", r.Header.Get("X-Subject-Token"))			
 		}
 		
 		w.Header().Set("X-Auth-Token", "12345")
@@ -61,7 +62,7 @@ func TestGetAccess(t *testing.T) {
 		},
 	}
 	
-	session := client.NewSession(ts.URL, auth)
+	session := client.NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	
 	authResource := &Auth {
 		Session: session,

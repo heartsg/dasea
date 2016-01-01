@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	
 	"github.com/heartsg/dasea/requests"
+	"github.com/heartsg/dasea/keystone/keystoneclient"
 	"github.com/heartsg/dasea/keystone/keystoneclient/types"
 )
 
@@ -29,7 +30,7 @@ func TestSession(t *testing.T) {
 
 	defer ts.Close()
 	
-	session := NewSession(ts.URL, nil)
+	session := NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, nil)
 	_, _, err := session.OriginalIp("127.0.0.1").Request("/", requests.GET, nil, nil, nil, false)
 	if err != nil {
 		t.Error(err)
@@ -65,7 +66,7 @@ func TestSessionAuth(t *testing.T) {
 		},
 	}
 	
-	session := NewSession(ts.URL, auth)
+	session := NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	_, _, err := session.OriginalIp("127.0.0.1").Request("/", requests.GET, nil, nil, nil, true)
 	if err != nil {
 		t.Error(err)
@@ -140,7 +141,7 @@ func TestSessionAuthPassword(t *testing.T) {
 		},
 	}
 	
-	session := NewSession(ts.URL, auth)
+	session := NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	_, _, err := session.OriginalIp("127.0.0.1").Request("/", requests.GET, nil, nil, nil, true)
 	if err != nil {
 		t.Error(err)
@@ -212,7 +213,7 @@ func TestSessionAuthToken(t *testing.T) {
 		},
 	}
 	
-	session := NewSession(ts.URL, auth)
+	session := NewSession(&keystoneclient.Opts{ AuthUrl: ts.URL }, auth)
 	_, _, err := session.OriginalIp("127.0.0.1").Request("/", requests.GET, nil, nil, nil, true)
 	if err != nil {
 		t.Error(err)

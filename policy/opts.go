@@ -4,7 +4,7 @@ package policy
 
 //Policy options, use config to retrieve the options from file/flag/env etc.
 
-type PolicyOpts struct {
+type Opts struct {
 	File       string `default:"policy.json"`
 	DefaultRule string `default:"default"`
 	Dirs		[]string `default:"policy.d"`

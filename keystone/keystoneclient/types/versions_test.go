@@ -5,7 +5,7 @@ import (
 	"encoding/json"
     "time"
     "github.com/heartsg/dasea/keystone/keystoneclient/util"
-    "github.com/heartsg/dasea/keystone/keystoneclient/testUtil"
+    "github.com/heartsg/dasea/testutil"
 )
 
 var vs = `{
@@ -107,7 +107,7 @@ func TestVersions(t *testing.T) {
 		t.Error("Failed to unmarshal version: %s", err)
 	}
 	
-	testUtil.Equals(t, versions, structVs)
+	testutil.Equals(t, versions, structVs)
 }
 
 
@@ -158,5 +158,5 @@ func TestVersion(t *testing.T) {
 		t.Error("Failed to unmarshal version: %s", err)
 	}
 	
-	testUtil.Equals(t, version, structV)
+	testutil.Equals(t, version, structV)
 }

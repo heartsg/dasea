@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"time"
 	"github.com/heartsg/dasea/keystone/keystoneclient/util"
-	"github.com/heartsg/dasea/keystone/keystoneclient/testUtil"
+	"github.com/heartsg/dasea/testutil"
 )
 
 
@@ -29,12 +29,12 @@ func TestAuthRequest(t *testing.T) {
 	request1Unmarshal := &AuthRequest{}
 	err := json.Unmarshal([]byte(request1Raw), request1Unmarshal)
 	
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request1Struct, request1Unmarshal)
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request1Struct, request1Unmarshal)
 	
 	request1Marshal, err := json.Marshal(request1Struct)
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request1Raw, string(request1Marshal))
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request1Raw, string(request1Marshal))
 	
 	//request 2 : another unscoped password authentication
 	request2Raw := `{"auth":{"identity":{"methods":["password"],"password":{"user":{"name":"admin","domain":{"id":"default"},"password":"devstacker"}}}}}`
@@ -58,12 +58,12 @@ func TestAuthRequest(t *testing.T) {
 	request2Unmarshal := &AuthRequest{}
 	err = json.Unmarshal([]byte(request2Raw), request2Unmarshal)
 	
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request2Struct, request2Unmarshal)
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request2Struct, request2Unmarshal)
 	
 	request2Marshal, err := json.Marshal(request2Struct)
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request2Raw, string(request2Marshal))
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request2Raw, string(request2Marshal))
 	
 	//request 3: explicit unscoped password authentication
 
@@ -86,12 +86,12 @@ func TestAuthRequest(t *testing.T) {
 	request3Unmarshal := &AuthRequest{}
 	err = json.Unmarshal([]byte(request3Raw), request3Unmarshal)
 	
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request3Struct, request3Unmarshal)
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request3Struct, request3Unmarshal)
 	
 	request3Marshal, err := json.Marshal(request3Struct)
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request3Raw, string(request3Marshal))
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request3Raw, string(request3Marshal))
 	
 	//request 4: scoped password authentication
 
@@ -137,16 +137,16 @@ func TestAuthRequest(t *testing.T) {
 	request4Unmarshal := &AuthRequest{}
 	err = json.Unmarshal([]byte(request4Raw), request4Unmarshal)
 	
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request4Struct1, request4Unmarshal)
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request4Struct1, request4Unmarshal)
 	
 	request4Marshal, err := json.Marshal(request4Struct1)
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request4Raw, string(request4Marshal))
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request4Raw, string(request4Marshal))
 	
 	request4Marshal, err = json.Marshal(request4Struct2)
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request4Raw, string(request4Marshal))
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request4Raw, string(request4Marshal))
 	
 	//request 5: unscoped token authorization
 
@@ -165,12 +165,12 @@ func TestAuthRequest(t *testing.T) {
 	request5Unmarshal := &AuthRequest{}
 	err = json.Unmarshal([]byte(request5Raw), request5Unmarshal)
 	
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request5Struct, request5Unmarshal)
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request5Struct, request5Unmarshal)
 	
 	request5Marshal, err := json.Marshal(request5Struct)
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request5Raw, string(request5Marshal))
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request5Raw, string(request5Marshal))
 	
 	//request 6: scoped token authorization
 	request6Raw := `{"auth":{"identity":{"methods":["token"],"token":{"id":"'$OS_TOKEN'"}},"scope":{"project":{"id":"5b50efd009b540559104ee3c03bbb2b7"}}}}`
@@ -193,12 +193,12 @@ func TestAuthRequest(t *testing.T) {
 	request6Unmarshal := &AuthRequest{}
 	err = json.Unmarshal([]byte(request6Raw), request6Unmarshal)
 	
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request6Struct, request6Unmarshal)
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request6Struct, request6Unmarshal)
 	
 	request6Marshal, err := json.Marshal(request6Struct)
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request6Raw, string(request6Marshal))
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request6Raw, string(request6Marshal))
 }
 
 
@@ -225,8 +225,8 @@ func TestAuthResponse(t *testing.T) {
 	
 	response1Unmarshal := &AuthResponse{}
 	err := json.Unmarshal([]byte(response1Raw), response1Unmarshal)
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, response1Struct, response1Unmarshal)
+	testutil.IsNil(t, err)
+	testutil.Equals(t, response1Struct, response1Unmarshal)
 	
 	//response 2: password scoped response
 	response2Raw := `{
@@ -414,8 +414,8 @@ func TestAuthResponse(t *testing.T) {
 
 	response2Unmarshal := &AuthResponse{}
 	err = json.Unmarshal([]byte(response2Raw), response2Unmarshal)
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, response2Struct, response2Unmarshal)
+	testutil.IsNil(t, err)
+	testutil.Equals(t, response2Struct, response2Unmarshal)
 }
 
 func TestAuthRequestCreation(t *testing.T) {
@@ -423,30 +423,30 @@ func TestAuthRequestCreation(t *testing.T) {
 		UserId: "423f19a4ac1e4f48bbb4180756e6eb6c",
 		Password: "devstacker",
 	})
-	testUtil.IsNil(t, err)
+	testutil.IsNil(t, err)
 	auth1Raw := `{"auth":{"identity":{"methods":["password"],"password":{"user":{"id":"423f19a4ac1e4f48bbb4180756e6eb6c","password":"devstacker"}}}}}`
 	auth1Json, err := json.Marshal(auth1)
-	testUtil.Equals(t, auth1Raw, string(auth1Json))
+	testutil.Equals(t, auth1Raw, string(auth1Json))
 	
 	auth2, err := NewAuthRequestFromParams(&AuthRequestParams{
 		Username: "admin",
 		Password: "devstacker",
 		DomainId: "default",
 	})
-	testUtil.IsNil(t, err)
+	testutil.IsNil(t, err)
 	auth2Raw := `{"auth":{"identity":{"methods":["password"],"password":{"user":{"name":"admin","domain":{"id":"default"},"password":"devstacker"}}}}}`
 	auth2Json, err := json.Marshal(auth2)
-	testUtil.Equals(t, auth2Raw, string(auth2Json))
+	testutil.Equals(t, auth2Raw, string(auth2Json))
 	
 	auth3, err := NewAuthRequestFromParams(&AuthRequestParams{
 		UserId: "ee4dfb6e5540447cb3741905149d9b6e",
 		Password: "devstacker",
 		ExplicitUnscope: true,
 	})
-	testUtil.IsNil(t, err)
+	testutil.IsNil(t, err)
 	auth3Raw := `{"auth":{"identity":{"methods":["password"],"password":{"user":{"id":"ee4dfb6e5540447cb3741905149d9b6e","password":"devstacker"}}},"scope":"unscoped"}}`
 	auth3Json, err := json.Marshal(auth3)
-	testUtil.Equals(t, auth3Raw, string(auth3Json))
+	testutil.Equals(t, auth3Raw, string(auth3Json))
 	
 	
 	auth4, err := NewAuthRequestFromParams(&AuthRequestParams{
@@ -455,27 +455,27 @@ func TestAuthRequestCreation(t *testing.T) {
 		ProjectId: "a6944d763bf64ee6a275f1263fae0352",
 		Scope: true,
 	})
-	testUtil.IsNil(t, err)
+	testutil.IsNil(t, err)
 	auth4Raw := `{"auth":{"identity":{"methods":["password"],"password":{"user":{"id":"ee4dfb6e5540447cb3741905149d9b6e","password":"devstacker"}}},"scope":{"project":{"id":"a6944d763bf64ee6a275f1263fae0352"}}}}`
 	auth4Json, err := json.Marshal(auth4)
-	testUtil.Equals(t, auth4Raw, string(auth4Json))
+	testutil.Equals(t, auth4Raw, string(auth4Json))
 	
 	auth5, err := NewAuthRequestFromParams(&AuthRequestParams{
 		Token: "'$OS_TOKEN'",
 	})
-	testUtil.IsNil(t, err)
+	testutil.IsNil(t, err)
 	auth5Raw := `{"auth":{"identity":{"methods":["token"],"token":{"id":"'$OS_TOKEN'"}}}}`
 	auth5Json, err := json.Marshal(auth5)
-	testUtil.Equals(t, auth5Raw, string(auth5Json))
+	testutil.Equals(t, auth5Raw, string(auth5Json))
 	
 	auth6, err := NewAuthRequestFromParams(&AuthRequestParams{
 		Token: "'$OS_TOKEN'",
 		ProjectId: "5b50efd009b540559104ee3c03bbb2b7",
 		Scope: true,
 	})
-	testUtil.IsNil(t, err)
+	testutil.IsNil(t, err)
 	auth6Raw := `{"auth":{"identity":{"methods":["token"],"token":{"id":"'$OS_TOKEN'"}},"scope":{"project":{"id":"5b50efd009b540559104ee3c03bbb2b7"}}}}`
 	auth6Json, err := json.Marshal(auth6)
-	testUtil.Equals(t, auth6Raw, string(auth6Json))
+	testutil.Equals(t, auth6Raw, string(auth6Json))
 
 }

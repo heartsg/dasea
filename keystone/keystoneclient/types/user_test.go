@@ -3,7 +3,7 @@ package types
 import (
 	"testing"
 	"encoding/json"
-	"github.com/heartsg/dasea/keystone/keystoneclient/testUtil"
+	"github.com/heartsg/dasea/testutil"
 )
 
 
@@ -25,12 +25,12 @@ func TestUserRequest(t *testing.T) {
 	request1Unmarshal := &UserRequest{}
 	err := json.Unmarshal([]byte(request1Raw), request1Unmarshal)
 	
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request1Struct, request1Unmarshal)
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request1Struct, request1Unmarshal)
 	
 	request1Marshal, err := json.Marshal(request1Struct)
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, request1Raw, string(request1Marshal))
+	testutil.IsNil(t, err)
+	testutil.Equals(t, request1Raw, string(request1Marshal))
 }
 
 func TestUserResponse(t *testing.T) {
@@ -65,8 +65,8 @@ func TestUserResponse(t *testing.T) {
 	
 	response1Unmarshal := &UserResponse{}
 	err := json.Unmarshal([]byte(response1Raw), response1Unmarshal)
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, response1Struct, response1Unmarshal)
+	testutil.IsNil(t, err)
+	testutil.Equals(t, response1Struct, response1Unmarshal)
 	
 	
 	//test link response
@@ -131,8 +131,8 @@ func TestUserResponse(t *testing.T) {
 	
 	response2Unmarshal := &UsersResponse{}
 	err = json.Unmarshal([]byte(response2Raw), response2Unmarshal)
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, response2Struct, response2Unmarshal)
+	testutil.IsNil(t, err)
+	testutil.Equals(t, response2Struct, response2Unmarshal)
 	
 }
 	

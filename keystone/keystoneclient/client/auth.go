@@ -1,21 +1,12 @@
 package client
 
-//
-// Implements similar functions as AuthPlugin in python-keystoneclient
-//
-// In python's keystoneclient implementation, GetAccess
-// will make use of already created session for http request
-// calls (to reuse the client and sessions).
-//
-// However, in our implementation, we currently create a new session
-// or requests for http request calls, because the original design seems over
-// complicated. We currently keep our design and only change if
-// find that the system performance drops.
-//
-//
-
 import (
 )
+
+//
+// Session is used to communicate with keystone identity servers
+// to retrieve access tokens.
+//
 
 type Auth interface {
 	GetAccess(session *Session) (*AccessInfo, error)

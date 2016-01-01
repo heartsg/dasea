@@ -14,7 +14,7 @@ import (
 // that writes its own "tag" into the RW and does nothing else.
 // Useful in checking if a chain is behaving in the right order.
 func tagMiddleware(tag string) Middleware {
-	return Middleware(func(ctx context.Context, w http.ResponseWriter, r *http.Request) context.Context {
+	return MiddlewareFunc(func(ctx context.Context, w http.ResponseWriter, r *http.Request) context.Context {
 		w.Write([]byte(tag))
 		return ctx
 	})
@@ -37,7 +37,7 @@ func TestMiddlewareHandlerChainCorrectly(t *testing.T) {
 	chain := MiddlewareChain(tagMiddleware("t1\n"), tagMiddleware("t2\n"))
 	newChain := MiddlewareChain(tagMiddleware("t3\n"), tagMiddleware("t4\n"))
 
-	chained := MiddlewareChainWithHandler(testApp, chain, newChain)
+	chained := MiddlewareHandlerChain(testApp, chain, newChain)
 
 	w := httptest.NewRecorder()
 	r, err := http.NewRequest("GET", "/", nil)
@@ -57,7 +57,7 @@ func TestPostMiddlewareHandlerChainCorrectly(t *testing.T) {
 	chain := MiddlewareChain(tagMiddleware("t1\n"), tagMiddleware("t2\n"))
 	newChain := MiddlewareChain(tagMiddleware("t3\n"), tagMiddleware("t4\n"))
 
-	chained := MiddlewareChainWithPostMiddleware([]Middleware{chain}, testApp, []Middleware{newChain})
+	chained := MiddlewareHandlerAfterwareChain([]Middleware{chain}, testApp, []Middleware{newChain})
 
 	w := httptest.NewRecorder()
 	r, err := http.NewRequest("GET", "/", nil)
@@ -74,7 +74,7 @@ func TestPostMiddlewareHandlerChainCorrectly(t *testing.T) {
 }
 
 func contextTagMiddleware(tag string, t *testing.T) Middleware {
-	return Middleware(func(ctx context.Context, w http.ResponseWriter, r *http.Request) context.Context {
+	return MiddlewareFunc(func(ctx context.Context, w http.ResponseWriter, r *http.Request) context.Context {
 		ctx = SetMiddlewareParam(ctx, tag, tag)
 		if (tag == "t1\n") {
 			t1, ok := MiddlewareParam(ctx, tag).(string)
@@ -131,7 +131,7 @@ func TestContextCorrectly(t *testing.T) {
 	chain := MiddlewareChain(contextTagMiddleware("t1\n", t), contextTagMiddleware("t2\n", t))
 	newChain := MiddlewareChain(contextTagMiddleware("t3\n", t), contextTagMiddleware("t4\n", t))
 	
-	chained := MiddlewareChainWithPostMiddleware([]Middleware{chain}, testApp, []Middleware{newChain})
+	chained := MiddlewareHandlerAfterwareChain([]Middleware{chain}, testApp, []Middleware{newChain})
 	w := httptest.NewRecorder()
 	r, err := http.NewRequest("GET", "/", nil)
 	if err != nil {

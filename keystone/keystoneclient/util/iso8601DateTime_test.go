@@ -18,7 +18,7 @@ import (
 	"encoding/json"
 	"testing"
 	"time"
-	"github.com/heartsg/dasea/keystone/keystoneclient/testUtil"
+	"github.com/heartsg/dasea/testutil"
 )
 
 var testValue = `{"created_at":"2014-09-29T14:44:31Z"}`
@@ -28,20 +28,20 @@ var timeTestValue = timeTest{CreatedAt: &Iso8601DateTime{testTime}}
 func TestMarshalTimeTest(t *testing.T) {
 	bytes, _ := json.Marshal(timeTestValue)
 
-	testUtil.Equals(t, testValue, string(bytes))
+	testutil.Equals(t, testValue, string(bytes))
 }
 
 func TestUnmarshalValidTimeTest(t *testing.T) {
 	val := timeTest{}
 	err := json.Unmarshal([]byte(testValue), &val)
-	testUtil.IsNil(t, err)
-	testUtil.Equals(t, timeTestValue.CreatedAt.Time, val.CreatedAt.Time)
+	testutil.IsNil(t, err)
+	testutil.Equals(t, timeTestValue.CreatedAt.Time, val.CreatedAt.Time)
 }
 
 func TestUnmarshalInvalidDataFormatTimeTest(t *testing.T) {
 	val := timeTest{}
 	err := json.Unmarshal([]byte("something other than date time"), &val)
-	testUtil.Assert(t, err != nil, "expected an error")
+	testutil.Assert(t, err != nil, "expected an error")
 }
 
 // Added this test to ensure that its understood that
@@ -49,7 +49,7 @@ func TestUnmarshalInvalidDataFormatTimeTest(t *testing.T) {
 func TestUnmarshalInvalidDateTimeFormatTimeTest(t *testing.T) {
 	val := timeTest{}
 	err := json.Unmarshal([]byte("2014-09-29T14:44Z"), &val)
-	testUtil.Assert(t, err != nil, "expected an error")
+	testutil.Assert(t, err != nil, "expected an error")
 }
 
 type timeTest struct {

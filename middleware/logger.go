@@ -11,7 +11,7 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"dasea/router"
+	"github.com/heartsg/dasea/router"
 	"golang.org/x/net/context"
 )
 

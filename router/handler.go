@@ -41,6 +41,8 @@ func (h ContextHandlerFunc) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // Turn a HandlerType into a ContextHandler
+// Note to turn http.Handler in to ContextHandler, the context passed in will be ignored (they
+// do not accept context parameter)
 func ContextHandlerWrap(h HandlerType) ContextHandler {
 	switch x := h.(type) {
 	case ContextHandler:
@@ -60,6 +62,8 @@ func ContextHandlerWrap(h HandlerType) ContextHandler {
 }
 
 // Turn a HandlerType into a http.Handler
+// Note that to turn ContextHnalder to http.Handler, we pass in an empty context to the ContextHandler
+// (because http.Handler do not have context parameter)
 func HTTPHandlerWrap(h HandlerType) http.Handler {
 	switch x := h.(type) {
 	case http.Handler:
